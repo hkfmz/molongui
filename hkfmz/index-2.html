@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette à valeur d'arrêt prédéfinie</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #roulette {
+            width: 200px;
+            height: 200px;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            position: relative;
+            margin: 0 auto;
+        }
+        #slots {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .slot {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            text-align: center;
+            line-height: 200px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #valeur-cible {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+            text-align: center;
+        }
+        #btn-lancer {
+            margin-top: 10px;
+            padding: 5px 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #eee;
+        }
+
+    </style>
+    <title>Document</title>
+</head>
+<body>
+
+<h1>Roulette à valeur d'arrêt prédéfinie</h1>
+    <div id="roulette">
+        <div id="slots"></div>
+    </div>
+    <div id="valeur-cible">
+        Valeur d'arrêt : <span id="valeur-cible-texte"></span>
+    </div>
+    <button id="btn-lancer">Lancer</button>
+
+    <script src="https://code.jquery.com/jquery-3.6.2.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+    <script>
+        const slots = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+        const valeurCibleElement = document.getElementById("valeur-cible-texte");
+        const btnLancer = document.getElementById("btn-lancer");
+        const slotsElement = document.getElementById("slots");
+
+        let valeurCible;
+        let intervalId;
+
+        function lancerRoulette() {
+        valeurCible = Math.floor(Math.random() * slots.length);
+        valeurCibleElement.textContent = slots[valeurCible];
+
+        // Définir la rotation de la roulette
+        let angle = 0;
+        intervalId = setInterval(() => {
+            angle += 10;
+            slotsElement.style.transform = `rotate(${angle}deg)`;
+
+            // Détecter l'arrêt sur la valeur cible
+            if (angle % 360 === 0) {
+            clearInterval(intervalId);
+            const slotIndex = Math.floor((360 - angle) / (360 / slots.length));
+            if (slotIndex === valeurCible) {
+                alert("Gagné ! La valeur cible était " + slots[valeurCible]);
+            } else {
+                alert("Perdu ! La valeur cible était " + slots[valeurCible]);
+            }
+            }
+        }, 10);
+        }
+
+        btnLancer.addEventListener("click", lancerRoulette);
+
+        // Initialiser la valeur cible
+        valeurCible = Math.floor(Math.random() * slots.length);
+        valeurCibleElement.textContent = slots[valeurCible];
+
+    </script>
+</body>
+</html>
